@@ -1,25 +1,26 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import React from 'react'
+import {NavigationContainer} from '@react-navigation/native'
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import {QueryClient, QueryClientProvider} from 'react-query'
 
-import React from 'react';
-import {SafeAreaView, ScrollView, StatusBar, Text} from 'react-native';
+import AboutArtScreen from './src/screens/aboutArt'
+import HomeScreen from './src/screens/home'
+
+const queryClient = new QueryClient()
+
+const Stack = createNativeStackNavigator()
 
 const App = () => {
   return (
-    <SafeAreaView>
-      <StatusBar />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <Text>Art Institute of Chicago</Text>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="About Art" component={AboutArtScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
+  )
+}
 
-export default App;
+export default App
