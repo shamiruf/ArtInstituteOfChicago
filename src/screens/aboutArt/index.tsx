@@ -2,7 +2,6 @@ import React from 'react'
 import {Image, ScrollView, Text, View} from 'react-native'
 
 import {getArtImage} from '../../components/Art'
-import {TArt} from '../../types'
 import styles from './styles'
 
 type AboutArtScreenProps = {
@@ -43,17 +42,21 @@ const AboutArtScreen = ({route}: AboutArtScreenProps) => {
         {route.params.routeParams.style_titles.length !== 0 && (
           <View style={styles.middleBlock}>
             <Text style={styles.middleBlockTitle}>Style</Text>
-            {route.params.routeParams.style_titles.map((s: string) => (
-              <Text>{s}</Text>
-            ))}
+            {route.params.routeParams.style_titles.map(
+              (s: string, i: number) => (
+                <Text key={i}>{s}</Text>
+              ),
+            )}
           </View>
         )}
         {route.params.routeParams.material_titles.length !== 0 && (
           <View style={styles.middleBlock}>
             <Text style={styles.middleBlockTitle}>Material</Text>
-            {route.params.routeParams.material_titles.map((m: string) => (
-              <Text>{m}</Text>
-            ))}
+            {route.params.routeParams.material_titles.map(
+              (m: string, i: number) => (
+                <Text key={i}>{m}</Text>
+              ),
+            )}
           </View>
         )}
         {route.params.routeParams.exhibition_history && (

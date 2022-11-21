@@ -1,6 +1,6 @@
 import React from 'react'
-import {ScrollView, Text, View} from 'react-native'
-import {useQuery} from 'react-query'
+import {NativeScrollEvent, ScrollView, Text, View} from 'react-native'
+import {useQuery, useQueryClient} from 'react-query'
 
 import Art from '../../components/Art'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -9,7 +9,34 @@ import {TArt} from '../../types'
 import styles from './styles'
 
 const HomeScreen = () => {
-  const {isLoading, error, data} = useQuery('arts', getArts)
+  const queryClient = useQueryClient()
+  const [page, setPage] = React.useState<number>(1)
+  const [arts, setArts] = React.useState<TArt[]>([])
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
+  const {isLoading, error} = useQuery(['arts', page], () => getArts(page), {
+    keepPreviousData: true,
+    staleTime: 5000,
+    onSuccess: data => {
+      console.log({data})
+      setArts([...arts, ...data.data])
+      setHasNextPage(data.pagination.total_pages < page ? false : true)
+    },
+  })
+
+  React.useEffect(() => {
+    queryClient.prefetchQuery(['arts', page], () => getArts(page + 1))
+  }, [page])
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    let paddingToBottom = 0
+    paddingToBottom += layoutMeasurement.height
+
+    return contentOffset.y >= contentSize.height - paddingToBottom
+  }
 
   if (error)
     return (
@@ -25,9 +52,18 @@ const HomeScreen = () => {
       color={'blue'}
     />
   ) : (
-    data && (
-      <ScrollView style={styles.homeWrapper}>
-        {data.data.map((art: TArt, i: number) => (
+    arts && (
+      <ScrollView
+        style={styles.homeWrapper}
+        onScroll={({nativeEvent}) => {
+          if (isCloseToBottom(nativeEvent)) {
+            if (hasNextPage) {
+              setPage(page + 1)
+            }
+          }
+        }}
+        scrollEventThrottle={400}>
+        {arts.map((art: TArt, i: number) => (
           <View key={i}>
             <Art art={art} />
           </View>
