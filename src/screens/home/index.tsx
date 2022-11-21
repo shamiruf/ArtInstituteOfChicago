@@ -1,10 +1,10 @@
 import React from 'react'
-import {Alert, ScrollView, Text, View} from 'react-native'
+import {ScrollView, Text, View} from 'react-native'
 import {useQuery} from 'react-query'
-import {getArts} from '../../api'
-import Art from '../../components/Art'
 
+import Art from '../../components/Art'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import {getArts} from '../../api'
 import {TArt} from '../../types'
 import styles from './styles'
 
