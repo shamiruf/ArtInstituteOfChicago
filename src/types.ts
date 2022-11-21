@@ -3,7 +3,10 @@ export type TArt = {
   title: string
   artist_display: string
   artist_title: string
-  category_titles: []
   image_id: string
   date_end: number
+  exhibition_history: string
+  department_title: string
+  style_titles: any
+  material_titles: any
 }
